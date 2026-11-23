@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Birthub 360 — Acesso restrito</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b1220;
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:#e8eefb}
+  .box{background:#111b2e;border:1px solid #263550;border-radius:16px;padding:36px 34px;
+    width:min(380px,92vw);box-shadow:0 16px 40px rgba(2,8,22,.35);text-align:center}
+  .logo{width:46px;height:46px;border-radius:13px;margin:0 auto 14px;
+    background:linear-gradient(135deg,#6498ff,#6653e1);display:grid;place-items:center;
+    font-weight:900;font-size:19px}
+  h1{font-size:18px;margin:0 0 4px;letter-spacing:-.3px}
+  p{color:#94a4c0;font-size:12.5px;margin:0 0 20px}
+  input{width:100%;padding:11px 13px;border-radius:9px;border:1px solid #344662;
+    background:#121f34;color:#e8eefb;font-size:14px;margin-bottom:12px}
+  input:focus{outline:3px solid #73dfe533;border-color:#73dfe5}
+  button{width:100%;padding:11px;border:0;border-radius:9px;background:#326eea;color:#fff;
+    font-size:14px;font-weight:700;cursor:pointer}
+  button:hover{background:#4a7ef0}
+  .err{color:#fc8392;font-size:12px;min-height:16px;margin-top:10px}
+  .hint{margin-top:16px;font-size:10.5px;color:#6b7d9d}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">B/</div>
+  <h1>Birthub 360 · Central de Orquestração</h1>
+  <p>Área restrita. Informe a senha de acesso.</p>
+  <form id="f">
+    <input id="pw" type="password" placeholder="Senha de acesso" autocomplete="off" autofocus>
+    <button type="submit">Entrar</button>
+    <div class="err" id="err"></div>
+  </form>
+  <div class="hint">Acesso local/sessão · páginas públicas não oferecem criptografia real</div>
+</div>
+<script>
+const HASH='ca96e9af6c23f6b7d6b8a8e32a141744510aef5c3fb28c1ee755b1341b2359f4';
+const KEY='b360_auth_v1';
+if(sessionStorage.getItem(KEY)==='1'){location.replace('CENTRAL.html');}
+document.getElementById('f').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const pw=document.getElementById('pw').value;
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pw));
+  const hex=[...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  if(hex===HASH){sessionStorage.setItem(KEY,'1');location.replace('CENTRAL.html');}
+  else{document.getElementById('err').textContent='Senha incorreta.';document.getElementById('pw').select();}
+});
+</script>
+</body>
+</html>
